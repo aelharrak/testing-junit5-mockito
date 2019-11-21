@@ -1,0 +1,3 @@
+com/sqli/core/services/HelloServiceTest.class
+com/sqli/core/controller/MainControllerTest.class
+com/sqli/core/services/HelloServiceMockTest.class
