@@ -13,7 +13,14 @@
         <java.version>1.8</java.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <mockito.version>2.24.0</mockito.version>
+
+        <!-- Serenity -->
+        <included.packages>-Dincluded.packages=discover</included.packages>
+        <included.adapters>-Dincluded.adapters=coverage:complexity:dependency</included.adapters>
+        <!-- Serenity -->
+
     </properties>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -60,12 +67,59 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <version>2.22.0</version>-->
+<!--            </plugin>-->
+
+            <!-- Serenity -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <forkMode>once</forkMode>-->
+<!--                    <argLine>-javaagent:${project.build.directory}/agents/my-special-agent.jar</argLine>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+            <!-- this configures the surefire plugin to run your tests with the javaagent enabled -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                    <argLine>-javaagent:${basedir}/target/openejb-javaagent-3.0.jar</argLine>
+                    <workingDirectory>${basedir}/target</workingDirectory>
+                </configuration>
             </plugin>
 
+            <!-- this tells maven to copy the openejb-javaagent jar into your target/ directory -->
+            <!-- where surefire can see it -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.openejb</groupId>
+                                    <artifactId>openejb-javaagent</artifactId>
+                                    <version>3.0</version>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Serenity -->
 
 
 
@@ -126,17 +180,6 @@
                     <systemPropertyVariables>
                         <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
                     </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
-
-
-            <plugin>
-                <groupId>org.openclover</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <configuration>
-                    <generateHtml>true</generateHtml>
-                    <generateXml>true</generateXml>
                 </configuration>
             </plugin>
 
