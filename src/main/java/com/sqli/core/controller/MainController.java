@@ -13,4 +13,11 @@ public class MainController {
         return "Hello Controller";
     }
 
+    @ResponseBody
+    @GetMapping("/home")
+    public String home() {
+        return "/index";
+    }
+
+
 }
