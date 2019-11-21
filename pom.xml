@@ -77,6 +77,7 @@
                     <formats>
                         <format>xml</format>
                     </formats>
+                    <check/>
                 </configuration>
                 <executions>
                     <execution>
@@ -140,7 +141,7 @@
             <id>jenkins</id>
             <activation>
                 <property>
-                    <name>env.BUILD_NUMBER</name>
+                    <name>1.0</name>
                 </property>
             </activation>
             <build>
